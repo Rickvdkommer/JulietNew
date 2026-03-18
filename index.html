@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juliet Emma — Strategic Fashion Brand &amp; Marketing Consultant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <style>
+    :root {
+      --cream:       #ECE8DF;
+      --cream-mid:   #E3DDD4;
+      --forest:      #2B3C2B;
+      --forest-mid:  #495C49;
+      --forest-pale: #8A9E8A;
+      --ink:         #18231A;
+      --muted:       #7E8E7E;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      background: var(--cream);
+      color: var(--forest);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 26px 52px;
+    }
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--forest);
+    }
+    .nav-btn {
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--forest);
+      border: 1px solid var(--forest);
+      padding: 13px 26px;
+      background: none;
+      cursor: pointer;
+      transition: background 0.28s, color 0.28s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .nav-btn:hover { background: var(--forest); color: var(--cream); }
+
+    /* ── HERO ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 100px 40px 80px;
+    }
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .hero-blob-1 { width:300px;height:220px;bottom:22%;left:5%;background:rgba(160,172,148,0.25); }
+    .hero-blob-2 { width:200px;height:180px;top:16%;right:10%;background:rgba(168,178,155,0.20); }
+
+    .hero-title {
+      font-size: clamp(68px, 11vw, 158px);
+      font-weight: 400;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+      color: var(--forest);
+      line-height: 0.92;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-sub {
+      margin-top: 28px;
+      font-size: clamp(14px, 1.5vw, 19px);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.14em;
+      color: var(--forest-mid);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.38;
+    }
+    .hero-scroll-cue span {
+      font-size: 10px;
+      letter-spacing: 0.30em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: var(--forest);
+      transform-origin: top;
+      animation: lineGrow 1.9s ease-in-out infinite;
+    }
+    @keyframes lineGrow {
+      0%  { transform: scaleY(0); opacity: 0; }
+      40% { transform: scaleY(1); opacity: 1; }
+      100%{ transform: scaleY(1); opacity: 0; }
+    }
+
+    /* ── STORY SECTION SHELL ────────────────────────────── */
+    .story-section {
+      position: relative;
+    }
+    .story-pin {
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── SPLIT LAYOUT (sections 1 & 2) ─────────────────── */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100vh;
+      width: 100%;
+    }
+    .split-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 72px;
+      position: relative;
+      z-index: 2;
+    }
+    .split-tree {
+      position: relative;
+      overflow: hidden;
+    }
+    .split-tree svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Section divider line */
+    .split-divider {
+      position: absolute;
+      top: 12%;
+      bottom: 12%;
+      width: 1px;
+      background: rgba(43,60,43,0.12);
+      z-index: 3;
+    }
+    .split-divider--left  { left: 50%; }
+
+    /* ── BOTTOM TREE LAYOUT (section 3) ─────────────────── */
+    .bottom-layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+    }
+    .offers-top {
+      flex: 0 0 58%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 80px 0;
+      position: relative;
+      z-index: 2;
+    }
+    .offers-tree-bottom {
+      flex: 0 0 42%;
+      position: relative;
+      overflow: hidden;
+    }
+    .offers-tree-bottom svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── TEXT ELEMENTS ─────────────────────────────────── */
+    .text-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--forest-pale);
+      margin-bottom: 28px;
+      display: block;
+    }
+    .text-heading {
+      font-size: clamp(38px, 4.5vw, 62px);
+      font-weight: 400;
+      color: var(--forest);
+      line-height: 1.10;
+      margin-bottom: 36px;
+    }
+    .text-body {
+      font-size: 18px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--forest-mid);
+      line-height: 1.82;
+      max-width: 430px;
+    }
+    .text-rule {
+      width: 48px;
+      height: 1px;
+      background: var(--forest-pale);
+      margin: 36px 0;
+    }
+    .text-detail {
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* philosophy quote style */
+    .philosophy-quote {
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1.48;
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+    .philosophy-attr {
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--forest-pale);
+    }
+
+    /* ── OFFERS GRID ───────────────────────────────────── */
+    .offers-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--forest-pale);
+      margin-bottom: 40px;
+    }
+    .offers-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .offer-card {
+      padding: 0 44px 0 0;
+      border-right: 1px solid rgba(43,60,43,0.12);
+    }
+    .offer-card:first-child { padding-left: 0; }
+    .offer-card:last-child { border-right: none; padding-right: 0; padding-left: 44px; }
+    .offer-card:nth-child(2) { padding-left: 44px; }
+
+    .offer-tag {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--forest-pale);
+      margin-bottom: 14px;
+    }
+    .offer-title {
+      font-size: clamp(24px, 2.4vw, 34px);
+      font-weight: 400;
+      color: var(--forest);
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+    .offer-body {
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--forest-mid);
+      line-height: 1.78;
+    }
+    .offer-price {
+      margin-top: 22px;
+      font-size: 11px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--forest);
+    }
+
+    /* ── TREE PROGRESS LINE ─────────────────────────────── */
+    .tree-progress {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .tree-progress.visible { opacity: 1; }
+    .progress-track {
+      width: 80px;
+      height: 1px;
+      background: rgba(43,60,43,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      background: var(--forest);
+      width: 0%;
+      transition: none;
+    }
+    .progress-label {
+      font-size: 9px;
+      letter-spacing: 0.30em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── CONTACT ───────────────────────────────────────── */
+    .contact-strip {
+      background: var(--forest);
+      padding: 110px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .contact-heading {
+      font-size: clamp(36px, 5vw, 70px);
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1;
+    }
+    .contact-cta {
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--cream);
+      border: 1px solid rgba(236,232,223,0.5);
+      padding: 18px 40px;
+      background: none;
+      cursor: pointer;
+      transition: background 0.28s, border-color 0.28s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .contact-cta:hover { background: rgba(236,232,223,0.10); border-color: var(--cream); }
+
+    /* ── FOOTER ─────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(43,60,43,0.10);
+      padding: 40px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ft-logo { font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; }
+    .ft-links { list-style: none; display: flex; gap: 36px; }
+    .ft-links a {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+    }
+    .ft-links a:hover { color: var(--forest); }
+    .ft-copy { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+
+    /* ── UTILITY ─────────────────────────────────────────── */
+    .will-reveal { opacity: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <span class="nav-logo">Juliet Emma.</span>
+  <a href="#offers-section" class="nav-btn">Work With Me</a>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <h1 class="hero-title">Juliet Emma.</h1>
+  <p class="hero-sub">Strategic Fashion Brand &amp; Marketing Consultant.</p>
+  <div class="hero-scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 1: ABOUT — text left, tree right ═══════ -->
+<div class="story-section" id="about-section" style="height:360vh">
+  <div class="story-pin" id="about-pin">
+    <div class="split-layout">
+      <!-- TEXT SIDE -->
+      <div class="split-text">
+        <span class="text-eyebrow will-reveal">About</span>
+        <h2 class="text-heading will-reveal">Rooted in fashion.<br>Built on strategy.</h2>
+        <div class="text-rule will-reveal"></div>
+        <p class="text-body will-reveal">
+          I am a strategic brand and marketing consultant working at the intersection
+          of fashion, culture, and commercial clarity. With over a decade embedded
+          inside luxury houses and independent labels, I help brands find their voice,
+          hold their ground, and grow with intention.
+        </p>
+        <p class="text-body will-reveal" style="margin-top:20px">
+          My work is unhurried and precise. Like the ginkgo, the oldest living tree —
+          unchanged across two hundred million years — the brands I build are designed
+          to outlast the season.
+        </p>
+      </div>
+      <!-- TREE SIDE -->
+      <div class="split-tree" id="about-tree-panel">
+        <svg id="svg-about"
+          viewBox="0 0 720 900"
+          preserveAspectRatio="xMidYMax meet"
+          xmlns="http://www.w3.org/2000/svg">
+          <g id="g-about"></g>
+        </svg>
+      </div>
+    </div>
+    <div class="split-divider split-divider--left"></div>
+    <!-- progress indicator -->
+    <div class="tree-progress" id="prog-about">
+      <div class="progress-track"><div class="progress-fill" id="fill-about"></div></div>
+      <span class="progress-label">Drawing</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SECTION 2: PHILOSOPHY — tree left, text right ═══════ -->
+<div class="story-section" id="philosophy-section" style="height:360vh">
+  <div class="story-pin" id="philosophy-pin">
+    <div class="split-layout">
+      <!-- TREE SIDE -->
+      <div class="split-tree" id="philosophy-tree-panel">
+        <svg id="svg-philosophy"
+          viewBox="0 0 720 900"
+          preserveAspectRatio="xMidYMax meet"
+          xmlns="http://www.w3.org/2000/svg">
+          <g id="g-philosophy"></g>
+        </svg>
+      </div>
+      <!-- TEXT SIDE -->
+      <div class="split-text">
+        <span class="text-eyebrow will-reveal">Philosophy</span>
+        <p class="philosophy-quote will-reveal">
+          "Growth is not a strategy. It is the natural consequence of knowing
+          exactly who you are — and refusing to be anything else."
+        </p>
+        <div class="text-rule will-reveal"></div>
+        <p class="text-body will-reveal">
+          Every brand I work with starts from the same place: truth.
+          Not the truth of a trend deck or a competitor audit, but the particular,
+          irreducible truth of what this house stands for.
+        </p>
+        <p class="text-body will-reveal" style="margin-top:18px">
+          From that, everything else follows.
+        </p>
+        <p class="philosophy-attr will-reveal" style="margin-top:32px">— Juliet Emma</p>
+      </div>
+    </div>
+    <div class="split-divider split-divider--left"></div>
+    <div class="tree-progress" id="prog-philosophy">
+      <div class="progress-track"><div class="progress-fill" id="fill-philosophy"></div></div>
+      <span class="progress-label">Drawing</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SECTION 3: OFFERS — tree bottom ═══════ -->
+<div class="story-section" id="offers-section" style="height:380vh">
+  <div class="story-pin" id="offers-pin">
+    <div class="bottom-layout">
+      <!-- OFFERS TOP -->
+      <div class="offers-top">
+        <p class="offers-eyebrow will-reveal">Work With Me</p>
+        <div class="offers-row">
+          <div class="offer-card">
+            <p class="offer-tag will-reveal">01</p>
+            <h3 class="offer-title will-reveal">Done With<br>You Campaign</h3>
+            <p class="offer-body will-reveal">
+              We build it together. You bring the vision,
+              I bring the framework. Weekly co-working sessions,
+              live feedback, and a campaign strategy
+              you truly understand.
+            </p>
+            <p class="offer-price will-reveal">Collaborative Engagement</p>
+          </div>
+          <div class="offer-card">
+            <p class="offer-tag will-reveal">02</p>
+            <h3 class="offer-title will-reveal">Done For<br>You Campaign</h3>
+            <p class="offer-body will-reveal">
+              Full conception to delivery. I lead your campaign
+              strategy, creative direction, and go-to-market
+              execution end to end — while you focus
+              on the collection.
+            </p>
+            <p class="offer-price will-reveal">Full Service Engagement</p>
+          </div>
+          <div class="offer-card">
+            <p class="offer-tag will-reveal">03</p>
+            <h3 class="offer-title will-reveal">Fractional<br>Partnership</h3>
+            <p class="offer-body will-reveal">
+              Your embedded strategic partner, without the
+              overhead of a full-time hire. Ongoing access,
+              board-level thinking, and long-form brand
+              stewardship across every season.
+            </p>
+            <p class="offer-price will-reveal">Retainer Engagement</p>
+          </div>
+        </div>
+      </div>
+      <!-- TREE BOTTOM -->
+      <div class="offers-tree-bottom" id="offers-tree-panel">
+        <svg id="svg-offers"
+          viewBox="0 0 1440 430"
+          preserveAspectRatio="xMidYMax meet"
+          xmlns="http://www.w3.org/2000/svg">
+          <g id="g-offers"></g>
+        </svg>
+      </div>
+    </div>
+    <div class="tree-progress" id="prog-offers">
+      <div class="progress-track"><div class="progress-fill" id="fill-offers"></div></div>
+      <span class="progress-label">Drawing</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CONTACT ═══════ -->
+<section class="contact-strip">
+  <h2 class="contact-heading">Let's build<br>something lasting.</h2>
+  <button class="contact-cta">Begin the Conversation</button>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <span class="ft-logo">Juliet Emma.</span>
+  <ul class="ft-links">
+    <li><a href="#">Work</a></li>
+    <li><a href="#">Journal</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <span class="ft-copy">© 2024 Juliet Emma</span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SEEDED RANDOM
+═══════════════════════════════════════════════════════════ */
+function seededRng(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GINKGO LEAF PATHS
+═══════════════════════════════════════════════════════════ */
+function ginkgoLeaf(bx, by, angle, s) {
+  const ca = Math.cos(angle), sa = Math.sin(angle);
+  const T = (lx, ly) => [bx + lx*ca*s + ly*sa*s, by + lx*sa*s - ly*ca*s];
+  const f = (lx, ly) => { const [x,y] = T(lx,ly); return `${x.toFixed(2)} ${y.toFixed(2)}`; };
+  return [
+    `M ${f(0,0)}`,
+    `C ${f(-0.28,0.04)} ${f(-0.88,0.38)} ${f(-0.90,0.58)}`,
+    `C ${f(-0.82,0.78)} ${f(-0.58,0.97)} ${f(-0.38,0.97)}`,
+    `Q ${f(-0.12,0.97)} ${f(0,0.76)}`,
+    `Q ${f(0.12,0.97)} ${f(0.38,0.97)}`,
+    `C ${f(0.58,0.97)} ${f(0.82,0.78)} ${f(0.90,0.58)}`,
+    `C ${f(0.88,0.38)} ${f(0.28,0.04)} ${f(0,0)}`,
+    `Z`
+  ].join(' ');
+}
+
+function ginkgoVeins(bx, by, angle, s) {
+  const spreads = [-0.52,-0.26,0,0.26,0.52];
+  const lens    = [0.76,0.86,0.79,0.86,0.76];
+  return spreads.map((sp, i) => {
+    const va = angle + sp;
+    const vl = s * lens[i];
+    const ex = bx + Math.sin(va)*vl;
+    const ey = by - Math.cos(va)*vl;
+    return `M ${bx.toFixed(2)} ${by.toFixed(2)} L ${ex.toFixed(2)} ${ey.toFixed(2)}`;
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GINKGO TREE BUILDER
+═══════════════════════════════════════════════════════════ */
+function buildGinkgo(cfg) {
+  const { rootX, rootY, trunkH, seed, sc } = cfg;
+  const rand = seededRng(seed);
+  const paths = [];
+
+  /* Trunk */
+  const SEGS = 5;
+  const tpts = [[rootX, rootY]];
+  let tx = rootX, ty = rootY;
+  for (let i = 1; i <= SEGS; i++) {
+    tx += (rand() - 0.5) * 18 * sc;
+    ty -= trunkH / SEGS;
+    tpts.push([tx, ty]);
+  }
+  let td = `M ${tpts[0][0].toFixed(2)} ${tpts[0][1].toFixed(2)}`;
+  for (let i = 1; i < tpts.length; i++) {
+    const cpx = (tpts[i-1][0]+tpts[i][0])/2 + (rand()-0.5)*10*sc;
+    const cpy = (tpts[i-1][1]+tpts[i][1])/2;
+    td += ` Q ${cpx.toFixed(2)} ${cpy.toFixed(2)} ${tpts[i][0].toFixed(2)} ${tpts[i][1].toFixed(2)}`;
+  }
+  paths.push({ d: td, sw: 5.8*sc, group: 'trunk' });
+
+  function trunkAt(t) {
+    const fi = t*(tpts.length-1);
+    const lo = Math.floor(fi), hi = Math.min(lo+1,tpts.length-1);
+    const fr = fi-lo;
+    return [tpts[lo][0]+fr*(tpts[hi][0]-tpts[lo][0]), tpts[lo][1]+fr*(tpts[hi][1]-tpts[lo][1])];
+  }
+
+  /* Branch recursion */
+  function branch(x1,y1,ang,len,depth,maxD) {
+    const x2 = x1 + Math.sin(ang)*len;
+    const y2 = y1 - Math.cos(ang)*len;
+    const cpx = (x1+x2)/2 + (rand()-0.5)*len*0.38;
+    const cpy = (y1+y2)/2 + (rand()-0.5)*len*0.16;
+    const sws = [3.6,2.0,1.10,0.60];
+    paths.push({
+      d:`M ${x1.toFixed(2)} ${y1.toFixed(2)} Q ${cpx.toFixed(2)} ${cpy.toFixed(2)} ${x2.toFixed(2)} ${y2.toFixed(2)}`,
+      sw:(sws[depth]??0.50)*sc,
+      group:`d${depth}`
+    });
+    if (depth < maxD) {
+      const n = depth===0 ? 2+Math.floor(rand()*2) : 1+Math.floor(rand()*2);
+      const sprd = depth===0 ? 0.50+rand()*0.26 : 0.32+rand()*0.22;
+      for (let k=0;k<n;k++) {
+        const off = n>1 ? (k/(n-1)-0.5)*2*sprd : 0;
+        const cLen = len*(0.54+rand()*0.22);
+        branch(x2,y2,ang+off,cLen,depth+1,maxD);
+      }
+    } else {
+      leafCluster(x2,y2,ang);
+    }
+  }
+
+  /* Leaf clusters */
+  function leafCluster(bx,by,parentAng) {
+    const n = 3+Math.floor(rand()*2);
+    for (let i=0;i<n;i++) {
+      const la = parentAng+(rand()-0.5)*1.85;
+      const pl = (7+rand()*6)*sc;
+      const ls = (10+rand()*8)*sc;
+      const px = bx+Math.sin(la)*pl;
+      const py = by-Math.cos(la)*pl;
+      paths.push({ d:`M ${bx.toFixed(2)} ${by.toFixed(2)} L ${px.toFixed(2)} ${py.toFixed(2)}`, sw:0.52*sc, group:'pet' });
+      paths.push({ d:ginkgoLeaf(px,py,la,ls), sw:0.62*sc, group:'leaf' });
+      ginkgoVeins(px,py,la,ls).forEach(vd => paths.push({ d:vd, sw:0.30*sc, group:'vein' }));
+    }
+  }
+
+  /* Attach branches along trunk */
+  const numMain = 7+Math.floor(rand()*3);
+  for (let i=0;i<numMain;i++) {
+    const t = 0.20+(i/numMain)*0.74;
+    const [bx,by] = trunkAt(t);
+    const side = i%2===0 ? -1 : 1;
+    const ang  = side*(0.50+rand()*0.46);
+    const len  = (50+rand()*52)*sc*(1-t*0.20);
+    branch(bx,by,ang,len,0,3);
+  }
+  const [ax,ay] = trunkAt(1);
+  branch(ax,ay,(rand()-0.5)*0.42,(60+rand()*42)*sc,0,3);
+
+  return paths;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER PATHS INTO SVG GROUP
+═══════════════════════════════════════════════════════════ */
+function renderTree(groupId, treeCfgs) {
+  const container = document.getElementById(groupId);
+  const all = [];
+  treeCfgs.forEach(cfg => {
+    const pathObjs = buildGinkgo(cfg);
+    pathObjs.forEach(p => {
+      const el = document.createElementNS('http://www.w3.org/2000/svg','path');
+      el.setAttribute('d', p.d);
+      el.setAttribute('stroke', '#18231A');
+      el.setAttribute('stroke-width', p.sw);
+      el.setAttribute('fill', 'none');
+      el.setAttribute('stroke-linecap', 'round');
+      el.setAttribute('stroke-linejoin', 'round');
+      el.setAttribute('opacity', cfg.opacity ?? 1);
+      container.appendChild(el);
+      all.push({ el, group: p.group });
+    });
+  });
+  return all;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HIDE ALL PATHS (strokeDashoffset = length)
+═══════════════════════════════════════════════════════════ */
+function hidePaths(all) {
+  all.forEach(p => {
+    const len = p.el.getTotalLength();
+    p.len = len;
+    p.el.style.strokeDasharray  = len;
+    p.el.style.strokeDashoffset = len;
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATE TREE ON GSAP TIMELINE
+   startAt = progress [0..1] when tree drawing begins
+═══════════════════════════════════════════════════════════ */
+function animateTree(all, tl, startAt) {
+  const get = g => all.filter(p => p.group===g).map(p => p.el);
+  const trunk = get('trunk'), d0=get('d0'), d1=get('d1'), d2=get('d2'), d3=get('d3');
+  const pet=get('pet'), leaf=get('leaf'), vein=get('vein');
+
+  const U = 0.55; // unit duration (scrub timeline, total=1)
+
+  function add(els, dur, each, from='start', at) {
+    if (!els.length) return;
+    tl.to(els, {
+      strokeDashoffset: 0,
+      duration: dur,
+      stagger: { each, from },
+      ease: 'none'
+    }, at);
+  }
+
+  add(trunk, U*1.6, 0.04, 'start', startAt);
+  add(d0,    U*1.1, 0.02, 'start', startAt + U*1.1);
+  add(d1,    U*0.9, 0.015,'start', startAt + U*1.9);
+  add(d2,    U*0.8, 0.012,'random',startAt + U*2.7);
+  add(d3,    U*0.6, 0.010,'random',startAt + U*3.3);
+  add(pet,   U*0.5, 0.008,'random',startAt + U*3.8);
+  add(leaf,  U*0.8, 0.006,'random',startAt + U*4.2);
+  add(vein,  U*0.6, 0.004,'random',startAt + U*4.9);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION SETUP — pins, text reveal, tree draw
+═══════════════════════════════════════════════════════════ */
+function setupSection(opts) {
+  const { sectionId, pinId, textSelector, all, fillId, progId } = opts;
+
+  hidePaths(all);
+
+  const textEls = gsap.utils.toArray(`#${pinId} ${textSelector}`);
+  const fillEl  = document.getElementById(fillId);
+  const progEl  = document.getElementById(progId);
+
+  // Set initial hidden state BEFORE defining timeline
+  gsap.set(textEls, { opacity: 0, y: 58 });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: `#${sectionId}`,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1.4,
+      pin: `#${pinId}`,
+      anticipatePin: 1,
+      onUpdate(self) {
+        if (self.progress > 0.12 && self.progress < 0.98) {
+          progEl.classList.add('visible');
+        } else {
+          progEl.classList.remove('visible');
+        }
+        const drawProgress = Math.max(0, Math.min(1, (self.progress - 0.18) / 0.79));
+        fillEl.style.width = (drawProgress * 100) + '%';
+      }
+    }
+  });
+
+  // Text enters in first 18% of scroll — fromTo is explicit regardless of CSS
+  tl.fromTo(textEls,
+    { opacity: 0, y: 58 },
+    { opacity: 1, y: 0, duration: 0.15, stagger: 0.038, ease: 'power2.out' },
+    0
+  );
+
+  // Tree draws from 18% to 97%
+  animateTree(all, tl, 0.18);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LENIS
+═══════════════════════════════════════════════════════════ */
+function setupLenis() {
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10*t)),
+    smoothWheel: true,
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(time => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  return lenis;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO ENTRANCE
+═══════════════════════════════════════════════════════════ */
+function heroEntrance() {
+  gsap.from('.hero-title',      { y: 50, opacity: 0, duration: 1.4, ease: 'power2.out' });
+  gsap.from('.hero-sub',        { y: 24, opacity: 0, duration: 1.0, delay: 0.5, ease: 'power2.out' });
+  gsap.from('nav',              { y: -20, opacity: 0, duration: 0.9, delay: 0.2, ease: 'power2.out' });
+  gsap.from('.hero-scroll-cue', { opacity: 0, duration: 0.6, delay: 1.2 });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── Section 1: About — single tree, right side ── */
+  const aboutAll = renderTree('g-about', [
+    { rootX: 360, rootY: 900, trunkH: 500, seed: 11111, sc: 0.95 }
+  ]);
+  setupSection({
+    sectionId: 'about-section',
+    pinId:     'about-pin',
+    textSelector: '.will-reveal',
+    all:       aboutAll,
+    fillId:    'fill-about',
+    progId:    'prog-about'
+  });
+
+  /* ── Section 2: Philosophy — mirrored tree, left side ── */
+  const philoAll = renderTree('g-philosophy', [
+    { rootX: 360, rootY: 900, trunkH: 510, seed: 22222, sc: 0.96 }
+  ]);
+  // Mirror the philosophy tree horizontally within its SVG viewBox
+  document.getElementById('g-philosophy').setAttribute('transform', 'translate(720,0) scale(-1,1)');
+
+  setupSection({
+    sectionId: 'philosophy-section',
+    pinId:     'philosophy-pin',
+    textSelector: '.will-reveal',
+    all:       philoAll,
+    fillId:    'fill-philosophy',
+    progId:    'prog-philosophy'
+  });
+
+  /* ── Section 3: Offers — two trees, bottom ── */
+  const offersAll = renderTree('g-offers', [
+    { rootX: 360,  rootY: 430, trunkH: 310, seed: 33333, sc: 0.72, opacity: 0.95 },
+    { rootX: 1080, rootY: 430, trunkH: 330, seed: 44444, sc: 0.75, opacity: 0.95 }
+  ]);
+  setupSection({
+    sectionId: 'offers-section',
+    pinId:     'offers-pin',
+    textSelector: '.will-reveal',
+    all:       offersAll,
+    fillId:    'fill-offers',
+    progId:    'prog-offers'
+  });
+
+  setupLenis();
+  heroEntrance();
+});
+</script>
+</body>
+</html>
