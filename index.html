@@ -544,12 +544,12 @@
         z-index: 1;
       }
 
-      .offers-row { grid-template-columns: 1fr; gap: 32px; }
+      .offers-row { grid-template-columns: 1fr; gap: 20px; }
       .offer-card {
         padding: 0 !important;
         border-right: none !important;
         border-bottom: 1px solid rgba(43,60,43,0.12);
-        padding-bottom: 28px !important;
+        padding-bottom: 20px !important;
       }
       .offer-card:last-child { border-bottom: none; padding-bottom: 0 !important; }
       .offer-title { font-size: 22px; }
@@ -740,7 +740,10 @@
           preserveAspectRatio="xMidYMax meet"
           overflow="visible"
           xmlns="http://www.w3.org/2000/svg">
-          <g id="g-offers"></g>
+          <g id="g-offers">
+            <g id="g-offers-left"></g>
+            <g id="g-offers-right"></g>
+          </g>
           <g id="g-offers-connector"></g>
         </svg>
       </div>
@@ -1462,10 +1465,13 @@ document.addEventListener('DOMContentLoaded', () => {
   ]);
   document.getElementById('g-philosophy').setAttribute('transform', 'translate(720,0) scale(-1,1)');
 
-  const offersAll = renderTree('g-offers', [
-    { rootX: 360,  rootY: 430, trunkH: 310, seed: 33333, sc: 0.72, opacity: 0.95 },
+  const offersLeft  = renderTree('g-offers-left', [
+    { rootX: 360,  rootY: 430, trunkH: 310, seed: 33333, sc: 0.72, opacity: 0.95 }
+  ]);
+  const offersRight = renderTree('g-offers-right', [
     { rootX: 1080, rootY: 430, trunkH: 330, seed: 44444, sc: 0.75, opacity: 0.95 }
   ]);
+  const offersAll = [...offersLeft, ...offersRight];
 
   /* ── Responsive setup via matchMedia ── */
   ScrollTrigger.matchMedia({
@@ -1561,6 +1567,13 @@ document.addEventListener('DOMContentLoaded', () => {
       // Draw tree from 15% onward
       animateTree(offersAll, offersTlMobile, 0.15);
 
+      // Scale down left tree and bring trees closer together on mobile
+      const offersLeftG = document.getElementById('g-offers-left');
+      offersLeftG.setAttribute('transform', 'translate(360,430) scale(0.7) translate(-360,-430)');
+      // Crop viewBox to show trees closer together (narrower band)
+      const offersSvg = document.getElementById('svg-offers');
+      offersSvg.setAttribute('viewBox', '200 0 1040 530');
+
       // Case studies: shift root to the right for more text room
       const csSvg = document.getElementById('svg-cs');
       csSvg.setAttribute('viewBox', '420 0 600 2700');
@@ -1571,6 +1584,8 @@ document.addEventListener('DOMContentLoaded', () => {
           svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
         });
         csSvg.setAttribute('viewBox', '0 0 1440 2700');
+        offersSvg.setAttribute('viewBox', '0 0 1440 530');
+        offersLeftG.removeAttribute('transform');
       };
     }
   });
