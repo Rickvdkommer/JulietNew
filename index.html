@@ -554,16 +554,14 @@
       /* Hide tree progress indicator on mobile */
       .tree-progress { display: none; }
 
-      /* Case studies — keep root animation, text wider on left */
+      /* Case studies — root animation with text on opposite sides */
       .cs-text {
-        width: 54%;
-        left: 5%;
+        width: 48%;
+        background: rgba(236,232,223,0.92);
+        padding: 24px;
       }
-      .cs-text--right {
-        right: auto;
-        left: 5%;
-        text-align: left;
-      }
+      .cs-text--left { left: 3%; }
+      .cs-text--right { right: 3%; }
       .cs-text--right .cs-rule { margin-left: 0; }
       .cs-title { font-size: 22px; }
       .cs-body { font-size: 13px; line-height: 1.7; }
@@ -1516,7 +1514,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Case studies: shift root to the right for more text room
       const csSvg = document.getElementById('svg-cs');
-      csSvg.setAttribute('viewBox', '-500 0 1940 2700');
+      csSvg.setAttribute('viewBox', '420 0 600 2700');
 
       // Cleanup: restore viewBox and preserveAspectRatio when switching to desktop
       return function() {
