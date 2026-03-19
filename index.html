@@ -516,12 +516,36 @@
       .text-rule { margin: 18px 0; }
       .philosophy-quote { font-size: 22px; margin-bottom: 18px; }
 
-      /* Offers section — flows naturally, no sticky, no trees */
-      #offers-section { height: auto !important; }
-      #offers-pin { position: relative; height: auto; overflow: visible; }
-      .bottom-layout { height: auto; }
-      .offers-top { padding: 60px 24px 40px; }
-      .offers-tree-bottom { display: none; }
+      /* Offers section — sticky with tree in bottom-right */
+      #offers-section { height: 350vh !important; }
+      #offers-pin {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .bottom-layout {
+        height: 100%;
+        position: relative;
+      }
+      .offers-top {
+        padding: 60px 24px 40px;
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .offers-tree-bottom {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 55%;
+        height: 45%;
+        opacity: 0.18;
+        z-index: 1;
+      }
 
       .offers-row { grid-template-columns: 1fr; gap: 32px; }
       .offer-card {
@@ -1499,19 +1523,33 @@ document.addEventListener('DOMContentLoaded', () => {
         all:       philoAll
       });
 
-      // Offers: just reveal text, no tree on mobile
+      // Offers: sticky scrub with tree drawing in bottom-right
+      hidePaths(offersAll);
       const offersTextEls = gsap.utils.toArray('#offers-pin .will-reveal');
       gsap.set(offersTextEls, { opacity: 0, y: 40 });
-      ScrollTrigger.create({
-        trigger: '#offers-section',
-        start: 'top 75%',
-        once: true,
-        onEnter() {
-          gsap.to(offersTextEls, {
-            opacity: 1, y: 0, duration: 0.8, stagger: 0.06, ease: 'power2.out'
-          });
+
+      const offersTlMobile = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#offers-section',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1.2,
         }
       });
+
+      // Text reveals in first 20%
+      offersTlMobile.to(offersTextEls, {
+        opacity: 1, y: 0, duration: 0.16, stagger: 0.02, ease: 'power2.out'
+      }, 0);
+
+      // Tree fades in and draws from 10% onward
+      const offersTreeEl = document.querySelector('.offers-tree-bottom');
+      offersTlMobile.to(offersTreeEl, {
+        opacity: 0.5, duration: 0.3, ease: 'power2.out'
+      }, 0.08);
+
+      // Draw tree from 15% onward
+      animateTree(offersAll, offersTlMobile, 0.15);
 
       // Case studies: shift root to the right for more text room
       const csSvg = document.getElementById('svg-cs');
