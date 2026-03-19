@@ -441,10 +441,12 @@
       .text-rule { margin: 18px 0; }
       .philosophy-quote { font-size: 22px; margin-bottom: 18px; }
 
-      /* Offers section */
-      .bottom-layout { height: 100%; display: flex; flex-direction: column; }
-      .offers-top { flex: 0 0 auto; padding: 60px 24px 20px; }
-      .offers-tree-bottom { flex: 1; min-height: 0; }
+      /* Offers section — flows naturally, no sticky, no trees */
+      #offers-section { height: auto !important; }
+      #offers-pin { position: relative; height: auto; overflow: visible; }
+      .bottom-layout { height: auto; }
+      .offers-top { padding: 60px 24px 40px; }
+      .offers-tree-bottom { display: none; }
 
       .offers-row { grid-template-columns: 1fr; gap: 32px; }
       .offer-card {
@@ -1007,10 +1009,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setupLenis();
     },
 
-    /* MOBILE / TABLET — no pinning, simple scroll triggers */
+    /* MOBILE / TABLET — sticky scrub for about & philosophy, simple reveal for offers */
     '(max-width: 1024px)': function() {
       // Center trees vertically instead of bottom-aligning
-      document.querySelectorAll('.split-tree svg, .offers-tree-bottom svg').forEach(svg => {
+      document.querySelectorAll('.split-tree svg').forEach(svg => {
         svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
       });
 
@@ -1026,17 +1028,24 @@ document.addEventListener('DOMContentLoaded', () => {
         textSelector: '.will-reveal',
         all:       philoAll
       });
-      setupSectionMobile({
-        sectionId: 'offers-section',
-        pinId:     'offers-pin',
-        textSelector: '.will-reveal',
-        all:       offersAll
+
+      // Offers: just reveal text, no tree on mobile
+      const offersTextEls = gsap.utils.toArray('#offers-pin .will-reveal');
+      gsap.set(offersTextEls, { opacity: 0, y: 40 });
+      ScrollTrigger.create({
+        trigger: '#offers-section',
+        start: 'top 75%',
+        once: true,
+        onEnter() {
+          gsap.to(offersTextEls, {
+            opacity: 1, y: 0, duration: 0.8, stagger: 0.06, ease: 'power2.out'
+          });
+        }
       });
-      // No Lenis on mobile — native scrolling is smoother
 
       // Cleanup: restore preserveAspectRatio when switching back to desktop
       return function() {
-        document.querySelectorAll('.split-tree svg, .offers-tree-bottom svg').forEach(svg => {
+        document.querySelectorAll('.split-tree svg').forEach(svg => {
           svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
         });
       };
