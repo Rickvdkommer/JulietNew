@@ -399,6 +399,81 @@
     .ft-links a:hover { color: var(--forest); }
     .ft-copy { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
 
+    /* ── CASE STUDIES ──────────────────────────────────────── */
+    .cs-pin {
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    /* SVG wrapper: 3× viewport height, translates vertically */
+    .cs-svg-wrap {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 300vh;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .cs-svg {
+      width: 100%;
+      height: 100%;
+    }
+    /* Text blocks: fixed in viewport space, fade in/out via JS */
+    .cs-text {
+      position: absolute;
+      z-index: 10;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(370px, 34vw);
+      opacity: 0;
+    }
+    .cs-text--left  { left: 4vw; }
+    .cs-text--right { right: 4vw; text-align: right; }
+
+    .cs-eyebrow {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--forest-pale);
+      margin-bottom: 18px;
+    }
+    .cs-num {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--forest-pale);
+      margin-bottom: 10px;
+    }
+    .cs-title {
+      font-size: clamp(24px, 2.8vw, 42px);
+      font-weight: 400;
+      color: var(--forest);
+      line-height: 1.10;
+      margin-bottom: 16px;
+    }
+    .cs-rule {
+      width: 36px;
+      height: 1px;
+      background: var(--forest-pale);
+      margin: 16px 0;
+    }
+    .cs-text--right .cs-rule { margin-left: auto; }
+    .cs-body {
+      font-size: 14px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--forest-mid);
+      line-height: 1.82;
+    }
+    .cs-stat {
+      margin-top: 14px;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--forest);
+    }
+
     /* ── UTILITY ─────────────────────────────────────────── */
     .will-reveal { opacity: 0; }
 
@@ -478,6 +553,30 @@
 
       /* Hide tree progress indicator on mobile */
       .tree-progress { display: none; }
+
+      /* Case studies — stacked cards, no pinning, no root SVG */
+      #cs-section { height: auto !important; }
+      #cs-pin {
+        position: relative;
+        height: auto;
+        overflow: visible;
+      }
+      .cs-svg-wrap { display: none; }
+      .cs-text {
+        position: relative;
+        top: auto;
+        transform: none;
+        width: 100%;
+        padding: 48px 24px;
+        opacity: 1;
+        border-bottom: 1px solid rgba(43,60,43,0.10);
+      }
+      .cs-text:last-of-type { border-bottom: none; }
+      .cs-text--left,
+      .cs-text--right { left: auto; right: auto; text-align: left; }
+      .cs-text--right .cs-rule { margin-left: 0; }
+      .cs-title { font-size: 24px; }
+      .cs-body { font-size: 14px; }
     }
   </style>
 </head>
@@ -627,10 +726,12 @@
       <!-- TREE BOTTOM -->
       <div class="offers-tree-bottom" id="offers-tree-panel">
         <svg id="svg-offers"
-          viewBox="0 0 1440 430"
+          viewBox="0 0 1440 530"
           preserveAspectRatio="xMidYMax meet"
+          overflow="visible"
           xmlns="http://www.w3.org/2000/svg">
           <g id="g-offers"></g>
+          <g id="g-offers-connector"></g>
         </svg>
       </div>
     </div>
@@ -638,6 +739,89 @@
       <div class="progress-track"><div class="progress-fill" id="fill-offers"></div></div>
       <span class="progress-label">Drawing</span>
     </div>
+  </div>
+</div>
+
+<!-- ═══════ SECTION 4: CASE STUDIES — migrating root ═══════ -->
+<div class="story-section" id="cs-section" style="height:500vh">
+  <div class="story-pin cs-pin" id="cs-pin">
+
+    <!-- Text 1: LEFT side — visible while root is on the RIGHT -->
+    <div class="cs-text cs-text--left" id="cs-blk-1">
+      <span class="cs-eyebrow">Case Studies</span>
+      <span class="cs-num">01</span>
+      <h3 class="cs-title">Maison Elara</h3>
+      <div class="cs-rule"></div>
+      <p class="cs-body">
+        A contemporary ready-to-wear label with strong product instincts and a
+        positioning problem. They were priced for luxury, presented as accessible,
+        and losing ground at every touchpoint in between.
+      </p>
+      <p class="cs-body" style="margin-top:14px">
+        Over twelve months we rebuilt the brand from the inside out: refined the
+        visual language, restructured the wholesale narrative, and redefined the
+        seasonal story from collection brief to buyer presentation. The label now
+        commands the shelf space — and the price point — it always deserved.
+      </p>
+      <p class="cs-stat" style="margin-top:18px">Wholesale accounts doubled &nbsp;·&nbsp; 18 months</p>
+      <p class="cs-stat" style="margin-top:6px">3 new European stockists &nbsp;·&nbsp; first season post-reposition</p>
+    </div>
+
+    <!-- Text 2: RIGHT side — visible while root is on the LEFT -->
+    <div class="cs-text cs-text--right" id="cs-blk-2">
+      <span class="cs-num">02</span>
+      <h3 class="cs-title">Osei Collective</h3>
+      <div class="cs-rule"></div>
+      <p class="cs-body">
+        A debut collection with a clear point of view and no infrastructure to
+        carry it. The founders had the vision. They needed the framework, the
+        language, and the relationships to make a first season count.
+      </p>
+      <p class="cs-body" style="margin-top:14px">
+        We built the go-to-market strategy from scratch, directed the press and
+        editorial launch, developed buyer-facing materials, and led outreach
+        across independent retail partners in the UK, Netherlands, and Japan.
+        Twenty-two stockists confirmed before the collection shipped.
+      </p>
+      <p class="cs-stat" style="margin-top:18px">22 stockists confirmed &nbsp;·&nbsp; debut season</p>
+      <p class="cs-stat" style="margin-top:6px">Press coverage in 6 publications &nbsp;·&nbsp; launch month</p>
+    </div>
+
+    <!-- Text 3: LEFT side — visible while root returns to RIGHT -->
+    <div class="cs-text cs-text--left" id="cs-blk-3">
+      <span class="cs-num">03</span>
+      <h3 class="cs-title">Studio Voss</h3>
+      <div class="cs-rule"></div>
+      <p class="cs-body">
+        A design-led label three seasons in, growing faster than its marketing
+        infrastructure could support. No internal strategy lead, no consistent
+        brand voice, no framework connecting collection to campaign to consumer.
+      </p>
+      <p class="cs-body" style="margin-top:14px">
+        Embedded as fractional CMO across three consecutive seasons, I built the
+        brand framework, architected the content calendar, led a full visual
+        identity refresh, and managed the agency relationships — all without
+        disrupting the production rhythm the founders had worked hard to protect.
+      </p>
+      <p class="cs-stat" style="margin-top:18px">3 seasons &nbsp;·&nbsp; fractional engagement</p>
+      <p class="cs-stat" style="margin-top:6px">Brand refresh launched without a single delayed drop</p>
+    </div>
+
+    <!--
+      SVG wrapper: 300vh tall, translates upward as root migrates.
+      viewBox: 1440 × 2700 (three stacked 900px zones).
+      preserveAspectRatio:none stretches to fill wrapper exactly.
+    -->
+    <div class="cs-svg-wrap" id="cs-svg-wrap">
+      <svg id="svg-cs" class="cs-svg"
+        viewBox="0 0 1440 2700"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <g id="g-cs-segs"></g>
+        <g id="g-cs-branches"></g>
+      </svg>
+    </div>
+
   </div>
 </div>
 
@@ -900,6 +1084,7 @@ function setupSection(opts) {
 
   // Tree draws from 18% to 97%
   animateTree(all, tl, 0.18);
+  return tl;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -929,6 +1114,319 @@ function setupSectionMobile(opts) {
 
   // Tree draws from 15% onward
   animateTree(all, tl, 0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   OFFERS CONNECTOR
+   Horizontal organic root connecting both tree bases,
+   then a tap-root curving down to x=820 at y=430 (bottom edge).
+   Drawn at the tail of the offers scroll timeline.
+═══════════════════════════════════════════════════════════ */
+function buildOffersConnector(tl) {
+  const rand = seededRng(55555);
+  const N = 18;
+
+  // ── Horizontal root in the SAME 430-viewBox as the trees ──
+  // Tree bases: left at (360, 430), right at (1080, 430)
+  const Y = 426;
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t  = i / N;
+    const x  = 360 + (1080 - 360) * t;
+    const jm = Math.sin(t * Math.PI) * 7;
+    pts.push([x, Y + (rand() - 0.5) * jm]);
+  }
+
+  let hd = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
+    const cpx = (ax + bx) / 2 + (rand() - 0.5) * 14;
+    const cpy = (ay + by) / 2 + (rand() - 0.5) * 4;
+    hd += ` Q ${cpx.toFixed(1)} ${cpy.toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+  }
+
+  // ── Descent from midpoint down to (820, 530) — exits viewBox bottom ──
+  const midX = 720;
+  const midY = Y;
+  const cp1x = midX + (rand() - 0.5) * 20;
+  const cp2x = 820  + (rand() - 0.5) * 20;
+  const descent = `M ${midX} ${midY} C ${cp1x.toFixed(1)} ${(midY + 35).toFixed(1)} ${cp2x.toFixed(1)} ${(midY + 80).toFixed(1)} 820 530`;
+
+  const group = document.getElementById('g-offers-connector');
+
+  function mkPath(d, sw) {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('d', d);
+    el.setAttribute('stroke', '#18231A');
+    el.setAttribute('stroke-width', sw);
+    el.setAttribute('fill', 'none');
+    el.setAttribute('stroke-linecap', 'round');
+    el.setAttribute('stroke-linejoin', 'round');
+    group.appendChild(el);
+    const len = el.getTotalLength();
+    el.style.strokeDasharray  = len;
+    el.style.strokeDashoffset = len;
+    return { el, len };
+  }
+
+  const horiz     = mkPath(hd,      2.6);
+  const descentEl = mkPath(descent, 2.8);
+
+  tl.to(horiz.el,     { strokeDashoffset: 0, duration: 1.2, ease: 'none' }, 2.9);
+  tl.to(descentEl.el, { strokeDashoffset: 0, duration: 1.8, ease: 'none' }, 3.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BUILD ROOT SEGMENTS
+   SVG coordinate space: 1440 × 2700 (3 stacked 900px zones)
+   Zone 1 (y 0-900):    RIGHT side, x≈1340, branches LEFT
+   Zone 2 (y 900-1800): LEFT side,  x≈100,  branches RIGHT
+   Zone 3 (y 1800-2700):RIGHT side, x≈1340, branches LEFT
+═══════════════════════════════════════════════════════════ */
+function buildCaseStudies(seed) {
+  const rand = seededRng(seed);
+  const RX = 820, LX = 620;
+
+  function makeSeg(nomX, y1, y2, n) {
+    n = n || 26;
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      const t = i / n;
+      const y = y1 + (y2 - y1) * t;
+      const w = (i === 0 || i === n) ? 0 : 10;
+      pts.push([nomX + (rand() - 0.5) * w, y]);
+    }
+    let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      const [ax, ay] = pts[i-1], [bx, by] = pts[i];
+      const cpx = (ax + bx) / 2 + (rand() - 0.5) * 8;
+      const cpy = (ay + by) / 2;
+      d += ` Q ${cpx.toFixed(1)} ${cpy.toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+    }
+    return { d, pts };
+  }
+
+  function makeConn(x1, y1, x2, y2) {
+    const cp1x = x1 + (rand() - 0.5) * 80;
+    const cp1y = y1 + (y2 - y1) * 0.35 + (rand() - 0.5) * 30;
+    const cp2x = x2 + (rand() - 0.5) * 80;
+    const cp2y = y1 + (y2 - y1) * 0.65 + (rand() - 0.5) * 30;
+    return `M ${x1.toFixed(1)} ${y1.toFixed(1)} C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)} ${cp2x.toFixed(1)} ${cp2y.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+  }
+
+  function makeBranches(pts, primaryDir, segPStart, segPEnd) {
+    const branches = [];
+    const GROW = (segPEnd - segPStart) * 0.07;
+
+    for (let i = 1; i < pts.length - 1; i++) {
+      if (rand() < 0.10) continue;
+      const [rx, ry] = pts[i];
+      const tSeg = i / (pts.length - 1);
+      const nodePStart = segPStart + tSeg * (segPEnd - segPStart);
+      const nodePEnd   = nodePStart + GROW;
+
+      const sides = [
+        { dir:  primaryDir, freq: 1.00 },
+        { dir: -primaryDir, freq: 0.80 },
+      ];
+
+      for (const side of sides) {
+        if (rand() > side.freq) continue;
+        const num = rand() > 0.60 ? 2 : 1;
+        for (let k = 0; k < num; k++) {
+          const len = 80 + rand() * 160;
+          const sag = rand() * len * 0.13;
+          const ex  = rx + side.dir * len;
+          const ey  = ry + sag + (rand() - 0.35) * 16;
+          const cpx = rx + side.dir * len * 0.50;
+          const cpy = ry + sag * 0.5 + (rand() - 0.5) * 11;
+          const sw  = 0.9 + rand() * 1.6;
+          branches.push({
+            d: `M ${rx.toFixed(1)} ${ry.toFixed(1)} Q ${cpx.toFixed(1)} ${cpy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`,
+            sw,
+            pStart: nodePStart,
+            pEnd:   nodePEnd
+          });
+          if (rand() > 0.45) {
+            const tm  = 0.28 + rand() * 0.44;
+            const mx  = rx + side.dir * len * tm;
+            const my  = ry + sag * tm;
+            const sl  = len * (0.20 + rand() * 0.26);
+            const sd  = rand() > 0.28 ? side.dir : -side.dir;
+            const sey = my + (rand() - 0.3) * sl * 0.38;
+            branches.push({
+              d: `M ${mx.toFixed(1)} ${my.toFixed(1)} L ${(mx + sd * sl).toFixed(1)} ${sey.toFixed(1)}`,
+              sw: sw * 0.34,
+              pStart: nodePStart + GROW * 0.3,
+              pEnd:   nodePEnd   + GROW * 0.3
+            });
+          }
+        }
+      }
+    }
+    return branches;
+  }
+
+  const W = {
+    r1: [0.00, 0.30],
+    c1: [0.30, 0.42],
+    l:  [0.42, 0.72],
+    c2: [0.72, 0.82],
+    r2: [0.82, 1.00],
+  };
+
+  const segR1 = makeSeg(RX,  0,   820);
+  const segL  = makeSeg(LX, 980,  1720);
+  const segR2 = makeSeg(RX, 1900, 2640);
+  const dC1   = makeConn(RX, 820,  LX, 980);
+  const dC2   = makeConn(LX, 1720, RX, 1900);
+
+  const brR1 = makeBranches(segR1.pts, -1, W.r1[0], W.r1[1]);
+  const brL  = makeBranches(segL.pts,  +1, W.l[0],  W.l[1]);
+  const brR2 = makeBranches(segR2.pts, -1, W.r2[0], W.r2[1]);
+
+  return {
+    segs: [
+      { d: segR1.d, sw: 3.6, window: W.r1 },
+      { d: dC1,     sw: 2.6, window: W.c1 },
+      { d: segL.d,  sw: 3.6, window: W.l  },
+      { d: dC2,     sw: 2.6, window: W.c2 },
+      { d: segR2.d, sw: 3.6, window: W.r2 },
+    ],
+    branches: [...brR1, ...brL, ...brR2],
+    W,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SETUP CASE STUDIES
+   All animation driven by onUpdate — no GSAP timeline,
+   no state, purely mathematical. Works perfectly with scrub.
+═══════════════════════════════════════════════════════════ */
+function setupCaseStudies() {
+  const { segs, branches, W } = buildCaseStudies(77777);
+
+  const svgWrap = document.getElementById('cs-svg-wrap');
+  const segsG   = document.getElementById('g-cs-segs');
+  const branchG = document.getElementById('g-cs-branches');
+
+  const segData = segs.map(s => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('d', s.d);
+    el.setAttribute('stroke', '#18231A');
+    el.setAttribute('stroke-width', s.sw);
+    el.setAttribute('fill', 'none');
+    el.setAttribute('stroke-linecap', 'round');
+    el.setAttribute('stroke-linejoin', 'round');
+    segsG.appendChild(el);
+    return { el, window: s.window, len: 0 };
+  });
+
+  const brData = branches.map(br => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('d', br.d);
+    el.setAttribute('stroke', '#18231A');
+    el.setAttribute('stroke-width', br.sw);
+    el.setAttribute('fill', 'none');
+    el.setAttribute('stroke-linecap', 'round');
+    el.setAttribute('opacity', '0.62');
+    branchG.appendChild(el);
+    return { el, pStart: br.pStart, pEnd: br.pEnd, len: 0 };
+  });
+
+  const blk1 = [...document.querySelectorAll('#cs-blk-1 > *')];
+  const blk2 = [...document.querySelectorAll('#cs-blk-2 > *')];
+  const blk3 = [...document.querySelectorAll('#cs-blk-3 > *')];
+  const blk1El = document.getElementById('cs-blk-1');
+  const blk2El = document.getElementById('cs-blk-2');
+  const blk3El = document.getElementById('cs-blk-3');
+
+  requestAnimationFrame(() => {
+    segData.forEach(s => {
+      s.len = s.el.getTotalLength();
+      s.el.style.strokeDasharray  = s.len;
+      s.el.style.strokeDashoffset = s.len;
+    });
+    brData.forEach(b => {
+      b.len = b.el.getTotalLength();
+      b.el.style.strokeDasharray  = b.len;
+      b.el.style.strokeDashoffset = b.len;
+    });
+
+    const c01  = t => Math.max(0, Math.min(1, t));
+    const ease  = t => t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+    const ramp  = (p, s, e) => ease(c01((p - s) / (e - s)));
+
+    const applyText = (blockEl, childEls, is, ie, os, oe, p) => {
+      const inT  = ramp(p, is, ie);
+      const outT = ramp(p, os, oe);
+      const op   = inT * (1 - outT);
+      const yOff = (1 - inT) * 44;
+      blockEl.style.opacity   = op;
+      childEls.forEach(el => {
+        el.style.transform = `translateY(${yOff}px)`;
+      });
+    };
+
+    ScrollTrigger.create({
+      trigger: '#cs-section',
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: '#cs-pin',
+      anticipatePin: 1,
+      onUpdate(self) {
+        const p  = self.progress;
+        const vh = window.innerHeight;
+
+        let ty = 0;
+        if      (p < W.c1[0]) { ty = 0; }
+        else if (p < W.c1[1]) { ty = -ease(c01((p - W.c1[0]) / (W.c1[1] - W.c1[0]))) * vh; }
+        else if (p < W.c2[0]) { ty = -vh; }
+        else if (p < W.c2[1]) { ty = -(1 + ease(c01((p - W.c2[0]) / (W.c2[1] - W.c2[0])))) * vh; }
+        else                   { ty = -2 * vh; }
+        svgWrap.style.transform = `translateY(${ty}px)`;
+
+        segData.forEach(s => {
+          const t = c01((p - s.window[0]) / (s.window[1] - s.window[0]));
+          s.el.style.strokeDashoffset = s.len * (1 - t);
+        });
+
+        brData.forEach(b => {
+          if (p <= b.pStart) {
+            b.el.style.strokeDashoffset = b.len;
+          } else if (p >= b.pEnd) {
+            b.el.style.strokeDashoffset = 0;
+          } else {
+            const t = (p - b.pStart) / (b.pEnd - b.pStart);
+            b.el.style.strokeDashoffset = b.len * (1 - t);
+          }
+        });
+
+        applyText(blk1El, blk1, 0.02, 0.12, 0.22, 0.30, p);
+        applyText(blk2El, blk2, 0.44, 0.54, 0.64, 0.72, p);
+        applyText(blk3El, blk3, 0.84, 0.93, 0.99, 1.01, p);
+      }
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SETUP CASE STUDIES — MOBILE (stacked cards, simple reveal)
+═══════════════════════════════════════════════════════════ */
+function setupCaseStudiesMobile() {
+  const blocks = ['#cs-blk-1', '#cs-blk-2', '#cs-blk-3'];
+  blocks.forEach(sel => {
+    const el = document.querySelector(sel);
+    gsap.set(el, { opacity: 0, y: 40 });
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 80%',
+      once: true,
+      onEnter() {
+        gsap.to(el, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
+      }
+    });
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -998,7 +1496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fillId:    'fill-philosophy',
         progId:    'prog-philosophy'
       });
-      setupSection({
+      const offersTl = setupSection({
         sectionId: 'offers-section',
         pinId:     'offers-pin',
         textSelector: '.will-reveal',
@@ -1006,6 +1504,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fillId:    'fill-offers',
         progId:    'prog-offers'
       });
+      buildOffersConnector(offersTl);
+      setupCaseStudies();
       setupLenis();
     },
 
@@ -1042,6 +1542,9 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
       });
+
+      // Case studies: stacked cards with simple reveal
+      setupCaseStudiesMobile();
 
       // Cleanup: restore preserveAspectRatio when switching back to desktop
       return function() {
