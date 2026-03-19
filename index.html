@@ -532,9 +532,6 @@
         padding: 60px 24px 40px;
         position: relative;
         z-index: 2;
-        height: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
       }
       .offers-tree-bottom {
         display: block;
@@ -1523,10 +1520,16 @@ document.addEventListener('DOMContentLoaded', () => {
         all:       philoAll
       });
 
-      // Offers: sticky scrub with tree drawing in bottom-right
+      // Offers: sticky scrub with content sliding up + tree drawing
       hidePaths(offersAll);
       const offersTextEls = gsap.utils.toArray('#offers-pin .will-reveal');
       gsap.set(offersTextEls, { opacity: 0, y: 40 });
+
+      // Calculate how far we need to slide the content up
+      const offersTopEl = document.querySelector('.offers-top');
+      const offersContentH = offersTopEl.scrollHeight;
+      const viewH = window.innerHeight;
+      const overflowY = Math.max(0, offersContentH - viewH + 40); // 40px bottom padding
 
       const offersTlMobile = gsap.timeline({
         scrollTrigger: {
@@ -1537,10 +1540,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Text reveals in first 20%
+      // Eyebrow + first card reveal in first 15%
       offersTlMobile.to(offersTextEls, {
         opacity: 1, y: 0, duration: 0.16, stagger: 0.02, ease: 'power2.out'
       }, 0);
+
+      // Slide content up to reveal lower cards (20% to 65%)
+      if (overflowY > 0) {
+        offersTlMobile.to(offersTopEl, {
+          y: -overflowY, duration: 0.45, ease: 'none'
+        }, 0.20);
+      }
 
       // Tree fades in and draws from 10% onward
       const offersTreeEl = document.querySelector('.offers-tree-bottom');
