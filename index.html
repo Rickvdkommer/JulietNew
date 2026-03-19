@@ -409,25 +409,28 @@
 
       .hero { padding: 80px 24px 60px; }
 
-      /* Remove fixed heights so content flows naturally */
-      .story-section { height: auto !important; }
-      .story-pin { height: auto !important; }
+      /* Sticky scroll: section has scroll room, pin sticks in view */
+      .story-section { height: 250vh !important; }
+      .story-pin {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
 
-      /* Stack split layouts vertically */
+      /* Stack split layouts vertically: text on top, tree below */
       .split-layout {
         display: flex;
         flex-direction: column;
-        height: auto;
+        height: 100%;
       }
       .split-text {
-        padding: 60px 24px 28px;
+        padding: 60px 24px 20px;
+        flex: 0 0 auto;
       }
       .split-tree {
-        height: 50vh;
-      }
-      .split-tree svg,
-      .offers-tree-bottom svg {
-        position: relative;
+        flex: 1;
+        min-height: 0;
       }
       /* Philosophy: put text above tree */
       #philosophy-pin .split-text { order: -1; }
@@ -439,9 +442,9 @@
       .philosophy-quote { font-size: 22px; margin-bottom: 18px; }
 
       /* Offers section */
-      .bottom-layout { height: auto; }
-      .offers-top { flex: none; padding: 60px 24px 20px; }
-      .offers-tree-bottom { height: 40vh; }
+      .bottom-layout { height: 100%; display: flex; flex-direction: column; }
+      .offers-top { flex: 0 0 auto; padding: 60px 24px 20px; }
+      .offers-tree-bottom { flex: 1; min-height: 0; }
 
       .offers-row { grid-template-columns: 1fr; gap: 32px; }
       .offer-card {
@@ -898,7 +901,7 @@ function setupSection(opts) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SECTION SETUP — MOBILE (no pinning, simple triggers)
+   SECTION SETUP — MOBILE (sticky pin via CSS, scrub draw)
 ═══════════════════════════════════════════════════════════ */
 function setupSectionMobile(opts) {
   const { sectionId, pinId, textSelector, all } = opts;
@@ -908,28 +911,22 @@ function setupSectionMobile(opts) {
   const textEls = gsap.utils.toArray(`#${pinId} ${textSelector}`);
   gsap.set(textEls, { opacity: 0, y: 40 });
 
-  // Reveal text when section enters viewport
-  ScrollTrigger.create({
-    trigger: `#${sectionId}`,
-    start: 'top 80%',
-    once: true,
-    onEnter() {
-      gsap.to(textEls, {
-        opacity: 1, y: 0, duration: 0.8, stagger: 0.06, ease: 'power2.out'
-      });
-    }
-  });
-
-  // Draw tree as user scrolls through section
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: `#${sectionId}`,
-      start: 'top 60%',
-      end: 'bottom 20%',
+      start: 'top top',
+      end: 'bottom bottom',
       scrub: 1.2,
     }
   });
-  animateTree(all, tl, 0);
+
+  // Text enters in first 15% of scroll
+  tl.to(textEls, {
+    opacity: 1, y: 0, duration: 0.12, stagger: 0.025, ease: 'power2.out'
+  }, 0);
+
+  // Tree draws from 15% onward
+  animateTree(all, tl, 0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════
