@@ -403,7 +403,7 @@
     .will-reveal { opacity: 0; }
 
     /* ── MOBILE ─────────────────────────────────────────── */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       nav { padding: 16px 20px; }
       .nav-btn { padding: 10px 18px; font-size: 9px; letter-spacing: 0.22em; }
 
@@ -424,6 +424,10 @@
       }
       .split-tree {
         height: 50vh;
+      }
+      .split-tree svg,
+      .offers-tree-bottom svg {
+        position: relative;
       }
       /* Philosophy: put text above tree */
       #philosophy-pin .split-text { order: -1; }
@@ -978,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ScrollTrigger.matchMedia({
 
     /* DESKTOP — pinned sections, full scroll-linked draw */
-    '(min-width: 769px)': function() {
+    '(min-width: 1025px)': function() {
       setupSection({
         sectionId: 'about-section',
         pinId:     'about-pin',
@@ -1006,8 +1010,13 @@ document.addEventListener('DOMContentLoaded', () => {
       setupLenis();
     },
 
-    /* MOBILE — no pinning, simple scroll triggers */
-    '(max-width: 768px)': function() {
+    /* MOBILE / TABLET — no pinning, simple scroll triggers */
+    '(max-width: 1024px)': function() {
+      // Center trees vertically instead of bottom-aligning
+      document.querySelectorAll('.split-tree svg, .offers-tree-bottom svg').forEach(svg => {
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      });
+
       setupSectionMobile({
         sectionId: 'about-section',
         pinId:     'about-pin',
@@ -1027,6 +1036,13 @@ document.addEventListener('DOMContentLoaded', () => {
         all:       offersAll
       });
       // No Lenis on mobile — native scrolling is smoother
+
+      // Cleanup: restore preserveAspectRatio when switching back to desktop
+      return function() {
+        document.querySelectorAll('.split-tree svg, .offers-tree-bottom svg').forEach(svg => {
+          svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
+        });
+      };
     }
   });
 
