@@ -554,29 +554,20 @@
       /* Hide tree progress indicator on mobile */
       .tree-progress { display: none; }
 
-      /* Case studies — stacked cards, no pinning, no root SVG */
-      #cs-section { height: auto !important; }
-      #cs-pin {
-        position: relative;
-        height: auto;
-        overflow: visible;
-      }
-      .cs-svg-wrap { display: none; }
+      /* Case studies — keep root animation, text wider on left */
       .cs-text {
-        position: relative;
-        top: auto;
-        transform: none;
-        width: 100%;
-        padding: 48px 24px;
-        opacity: 1;
-        border-bottom: 1px solid rgba(43,60,43,0.10);
+        width: 54%;
+        left: 5%;
       }
-      .cs-text:last-of-type { border-bottom: none; }
-      .cs-text--left,
-      .cs-text--right { left: auto; right: auto; text-align: left; }
+      .cs-text--right {
+        right: auto;
+        left: 5%;
+        text-align: left;
+      }
       .cs-text--right .cs-rule { margin-left: 0; }
-      .cs-title { font-size: 24px; }
-      .cs-body { font-size: 14px; }
+      .cs-title { font-size: 22px; }
+      .cs-body { font-size: 13px; line-height: 1.7; }
+      .cs-stat { font-size: 9px; }
     }
   </style>
 </head>
@@ -1411,25 +1402,6 @@ function setupCaseStudies() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SETUP CASE STUDIES — MOBILE (stacked cards, simple reveal)
-═══════════════════════════════════════════════════════════ */
-function setupCaseStudiesMobile() {
-  const blocks = ['#cs-blk-1', '#cs-blk-2', '#cs-blk-3'];
-  blocks.forEach(sel => {
-    const el = document.querySelector(sel);
-    gsap.set(el, { opacity: 0, y: 40 });
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 80%',
-      once: true,
-      onEnter() {
-        gsap.to(el, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
-      }
-    });
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
    LENIS
 ═══════════════════════════════════════════════════════════ */
 function setupLenis() {
@@ -1505,7 +1477,6 @@ document.addEventListener('DOMContentLoaded', () => {
         progId:    'prog-offers'
       });
       buildOffersConnector(offersTl);
-      setupCaseStudies();
       setupLenis();
     },
 
@@ -1543,17 +1514,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Case studies: stacked cards with simple reveal
-      setupCaseStudiesMobile();
+      // Case studies: shift root to the right for more text room
+      const csSvg = document.getElementById('svg-cs');
+      csSvg.setAttribute('viewBox', '-500 0 1940 2700');
 
-      // Cleanup: restore preserveAspectRatio when switching back to desktop
+      // Cleanup: restore viewBox and preserveAspectRatio when switching to desktop
       return function() {
         document.querySelectorAll('.split-tree svg').forEach(svg => {
           svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
         });
+        csSvg.setAttribute('viewBox', '0 0 1440 2700');
       };
     }
   });
+
+  /* ── Section 4: Case Studies — runs on all screen sizes ── */
+  setupCaseStudies();
 
   heroEntrance();
 });
