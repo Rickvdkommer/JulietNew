@@ -401,6 +401,75 @@
 
     /* ── UTILITY ─────────────────────────────────────────── */
     .will-reveal { opacity: 0; }
+
+    /* ── MOBILE ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-btn { padding: 10px 18px; font-size: 9px; letter-spacing: 0.22em; }
+
+      .hero { padding: 80px 24px 60px; }
+
+      /* Remove fixed heights so content flows naturally */
+      .story-section { height: auto !important; }
+      .story-pin { height: auto !important; }
+
+      /* Stack split layouts vertically */
+      .split-layout {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+      }
+      .split-text {
+        padding: 60px 24px 28px;
+      }
+      .split-tree {
+        height: 50vh;
+      }
+      /* Philosophy: put text above tree */
+      #philosophy-pin .split-text { order: -1; }
+      .split-divider { display: none; }
+
+      .text-heading { font-size: 28px; margin-bottom: 18px; }
+      .text-body { font-size: 15px; line-height: 1.7; max-width: none; }
+      .text-rule { margin: 18px 0; }
+      .philosophy-quote { font-size: 22px; margin-bottom: 18px; }
+
+      /* Offers section */
+      .bottom-layout { height: auto; }
+      .offers-top { flex: none; padding: 60px 24px 20px; }
+      .offers-tree-bottom { height: 40vh; }
+
+      .offers-row { grid-template-columns: 1fr; gap: 32px; }
+      .offer-card {
+        padding: 0 !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(43,60,43,0.12);
+        padding-bottom: 28px !important;
+      }
+      .offer-card:last-child { border-bottom: none; padding-bottom: 0 !important; }
+      .offer-title { font-size: 22px; }
+      .offer-body { font-size: 14px; }
+
+      /* Contact */
+      .contact-strip {
+        flex-direction: column;
+        padding: 60px 24px;
+        text-align: center;
+        gap: 28px;
+      }
+
+      /* Footer */
+      footer {
+        flex-direction: column;
+        gap: 20px;
+        padding: 28px 24px;
+        text-align: center;
+      }
+      .ft-links { justify-content: center; }
+
+      /* Hide tree progress indicator on mobile */
+      .tree-progress { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -825,6 +894,41 @@ function setupSection(opts) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   SECTION SETUP — MOBILE (no pinning, simple triggers)
+═══════════════════════════════════════════════════════════ */
+function setupSectionMobile(opts) {
+  const { sectionId, pinId, textSelector, all } = opts;
+
+  hidePaths(all);
+
+  const textEls = gsap.utils.toArray(`#${pinId} ${textSelector}`);
+  gsap.set(textEls, { opacity: 0, y: 40 });
+
+  // Reveal text when section enters viewport
+  ScrollTrigger.create({
+    trigger: `#${sectionId}`,
+    start: 'top 80%',
+    once: true,
+    onEnter() {
+      gsap.to(textEls, {
+        opacity: 1, y: 0, duration: 0.8, stagger: 0.06, ease: 'power2.out'
+      });
+    }
+  });
+
+  // Draw tree as user scrolls through section
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: `#${sectionId}`,
+      start: 'top 60%',
+      end: 'bottom 20%',
+      scrub: 1.2,
+    }
+  });
+  animateTree(all, tl, 0);
+}
+
+/* ═══════════════════════════════════════════════════════════
    LENIS
 ═══════════════════════════════════════════════════════════ */
 function setupLenis() {
@@ -855,50 +959,77 @@ function heroEntrance() {
 document.addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ── Section 1: About — single tree, right side ── */
+  /* ── Render trees (shared between desktop & mobile) ── */
   const aboutAll = renderTree('g-about', [
     { rootX: 360, rootY: 900, trunkH: 500, seed: 11111, sc: 0.95 }
   ]);
-  setupSection({
-    sectionId: 'about-section',
-    pinId:     'about-pin',
-    textSelector: '.will-reveal',
-    all:       aboutAll,
-    fillId:    'fill-about',
-    progId:    'prog-about'
-  });
 
-  /* ── Section 2: Philosophy — mirrored tree, left side ── */
   const philoAll = renderTree('g-philosophy', [
     { rootX: 360, rootY: 900, trunkH: 510, seed: 22222, sc: 0.96 }
   ]);
-  // Mirror the philosophy tree horizontally within its SVG viewBox
   document.getElementById('g-philosophy').setAttribute('transform', 'translate(720,0) scale(-1,1)');
 
-  setupSection({
-    sectionId: 'philosophy-section',
-    pinId:     'philosophy-pin',
-    textSelector: '.will-reveal',
-    all:       philoAll,
-    fillId:    'fill-philosophy',
-    progId:    'prog-philosophy'
-  });
-
-  /* ── Section 3: Offers — two trees, bottom ── */
   const offersAll = renderTree('g-offers', [
     { rootX: 360,  rootY: 430, trunkH: 310, seed: 33333, sc: 0.72, opacity: 0.95 },
     { rootX: 1080, rootY: 430, trunkH: 330, seed: 44444, sc: 0.75, opacity: 0.95 }
   ]);
-  setupSection({
-    sectionId: 'offers-section',
-    pinId:     'offers-pin',
-    textSelector: '.will-reveal',
-    all:       offersAll,
-    fillId:    'fill-offers',
-    progId:    'prog-offers'
+
+  /* ── Responsive setup via matchMedia ── */
+  ScrollTrigger.matchMedia({
+
+    /* DESKTOP — pinned sections, full scroll-linked draw */
+    '(min-width: 769px)': function() {
+      setupSection({
+        sectionId: 'about-section',
+        pinId:     'about-pin',
+        textSelector: '.will-reveal',
+        all:       aboutAll,
+        fillId:    'fill-about',
+        progId:    'prog-about'
+      });
+      setupSection({
+        sectionId: 'philosophy-section',
+        pinId:     'philosophy-pin',
+        textSelector: '.will-reveal',
+        all:       philoAll,
+        fillId:    'fill-philosophy',
+        progId:    'prog-philosophy'
+      });
+      setupSection({
+        sectionId: 'offers-section',
+        pinId:     'offers-pin',
+        textSelector: '.will-reveal',
+        all:       offersAll,
+        fillId:    'fill-offers',
+        progId:    'prog-offers'
+      });
+      setupLenis();
+    },
+
+    /* MOBILE — no pinning, simple scroll triggers */
+    '(max-width: 768px)': function() {
+      setupSectionMobile({
+        sectionId: 'about-section',
+        pinId:     'about-pin',
+        textSelector: '.will-reveal',
+        all:       aboutAll
+      });
+      setupSectionMobile({
+        sectionId: 'philosophy-section',
+        pinId:     'philosophy-pin',
+        textSelector: '.will-reveal',
+        all:       philoAll
+      });
+      setupSectionMobile({
+        sectionId: 'offers-section',
+        pinId:     'offers-pin',
+        textSelector: '.will-reveal',
+        all:       offersAll
+      });
+      // No Lenis on mobile — native scrolling is smoother
+    }
   });
 
-  setupLenis();
   heroEntrance();
 });
 </script>
