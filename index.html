@@ -1569,10 +1569,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Scale down left tree and bring trees closer together on mobile
       const offersLeftG = document.getElementById('g-offers-left');
-      offersLeftG.setAttribute('transform', 'translate(360,430) scale(0.7) translate(-360,-430)');
+      offersLeftG.setAttribute('transform', 'translate(300,0) translate(360,430) scale(0.7) translate(-360,-430)');
       // Crop viewBox to show trees closer together (narrower band)
       const offersSvg = document.getElementById('svg-offers');
-      offersSvg.setAttribute('viewBox', '200 0 1040 530');
+      offersSvg.setAttribute('viewBox', '350 0 880 530');
 
       // Case studies: shift root to the right for more text room
       const csSvg = document.getElementById('svg-cs');
